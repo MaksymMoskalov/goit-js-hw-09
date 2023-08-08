@@ -18,7 +18,6 @@ const options = {
   onClose(selectedDates) {
     if (selectedDates[0].getTime() < Date.now()) {
       Notiflix.Notify.warning('Please choose a date in the future');
-      // window.alert('Please choose a date in the future');
       refs.start.setAttribute('disabled', 1);
       return;
     }
