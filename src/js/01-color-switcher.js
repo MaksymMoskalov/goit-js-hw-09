@@ -8,8 +8,7 @@ refs.start.addEventListener('click', onStart);
 refs.stop.addEventListener('click', onStop);
 
 function onStart() {
-  refs.start.setAttribute('disabled', 1);
-  refs.stop.removeAttribute('disabled');
+  disabler(refs.stop, refs.start);
   intervalId = setInterval(() => {
     document.body.style.backgroundColor = getRandomHexColor();
   }, 1000);
@@ -17,12 +16,16 @@ function onStart() {
 
 function onStop() {
   clearInterval(intervalId);
-  refs.stop.setAttribute('disabled', 1);
-  refs.start.removeAttribute('disabled');
+  disabler(refs.start, refs.stop);
 }
 
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215)
     .toString(16)
     .padStart(6, 0)}`;
+}
+
+function disabler(start, stop) {
+  stop.setAttribute('disabled', 1);
+  start.removeAttribute('disabled');
 }

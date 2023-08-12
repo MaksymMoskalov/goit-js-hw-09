@@ -3,6 +3,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const refs = {
+  calendar: document.querySelector('#datetime-picker'),
   days: document.querySelector('span[data-days]'),
   hours: document.querySelector('span[data-hours]'),
   minutes: document.querySelector('span[data-minutes]'),
@@ -21,29 +22,26 @@ const options = {
       refs.start.setAttribute('disabled', 1);
       return;
     }
-    let timerId = null;
     refs.start.removeAttribute('disabled');
-    refs.start.addEventListener('click', () => {
-      timerId = setInterval(() => {
-        const difference = selectedDates[0].getTime() - Date.now();
-        const data = convertMs(difference);
-        if (
-          data.days === '00' &&
-          data.hours === '00' &&
-          data.minutes === '00' &&
-          data.seconds === '00'
-        ) {
-          clearInterval(timerId);
-          refs.start.setAttribute('disabled', 1);
-        }
-        updateMarkup(data);
-      }, 1000);
-    });
   },
 };
-refs.start.setAttribute('disabled', 1);
+let timerId = null;
+flatpickr(refs.calendar, options);
 
-flatpickr('#datetime-picker', options);
+refs.start.setAttribute('disabled', 1);
+refs.start.addEventListener('click', onBtnClick);
+
+function onBtnClick() {
+  timerId = setInterval(() => {
+    const difference = new Date(refs.calendar.value) - Date.now();
+    if (difference < 1000) {
+      clearInterval(timerId);
+      refs.start.setAttribute('disabled', 1);
+    }
+    const data = convertMs(difference);
+    updateMarkup(data);
+  }, 1000);
+}
 
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
